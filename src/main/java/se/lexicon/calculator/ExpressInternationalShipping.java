@@ -1,15 +1,21 @@
 package se.lexicon.calculator;
 
 import se.lexicon.model.Destination;
+import se.lexicon.model.ShippingDetails;
 import se.lexicon.model.ShippingRequest;
 import se.lexicon.model.Speed;
 import se.lexicon.service.ShippingCostCalculator;
-
 import org.springframework.stereotype.Component;
 import jakarta.annotation.PostConstruct;
 
 @Component
 public class ExpressInternationalShipping implements ShippingCostCalculator {
+
+    private final ShippingDetails shippingDetails;
+
+    public ExpressInternationalShipping(ShippingDetails shippingDetails) {
+        this.shippingDetails = shippingDetails;
+    }
 
     @Override
     public boolean supports(ShippingRequest r) {
@@ -18,7 +24,7 @@ public class ExpressInternationalShipping implements ShippingCostCalculator {
 
     @Override
     public double calculate(ShippingRequest r) {
-        return 25 + 4.5 * r.weightKg();
+        return shippingDetails.getInternationalExpressBaseCost() + shippingDetails.getInternationalExpressCostPerKg() * r.weightKg();
     }
 
     @PostConstruct
